@@ -49,14 +49,44 @@ public:
         }
     }
 
-    void mergeSort(int left, int right); // (5) Merge Sort
-    void quickSort(int left, int right); // (6) Quick Sort
+    void mergeSort(int left, int right);
+
+
+    void quickSort(int left, int right) {
+        if (left >= right) return;
+
+        int mid = partition(left, right);
+
+        quickSort(left, mid-1);
+        quickSort(mid + 1, right);
+    }
+
+
     void countSort();      // (7) Count Sort (Only for int)
     void radixSort();      // (8) Radix Sort (Only for int)
     void bucketSort();     // (9) Bucket Sort
 
-    void merge(int left, int mid, int right); // Merge Sort Helper
-    int partition(int low, int high); // Quick Sort Helper
+    void merge(int left, int mid, int right);
+
+    
+    int partition(int low, int high) {
+        T pivot = data[low];
+        i = low;
+        for (j = low + 1; j < high; j++) {
+            if (pivot > data[j]) [
+                i++;
+                swap(data[i], data[j]);
+            ]
+        }
+        swap(data[i], pivot);
+        return i;
+    }
+
+    void swap(T& a, T& b) {
+        T tmp = a;
+        a = b;
+        b = temp;
+    }
 
     void displayData();  // Print the current state of the array
     void measureSortTime(void (SortingSystem::*sortFunc)()); // Measure sorting time
