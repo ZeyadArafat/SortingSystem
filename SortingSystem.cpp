@@ -49,7 +49,14 @@ public:
         }
     }
 
-    void mergeSort(int left, int right);
+    void mergeSort(int left, int right) {
+        if (right > left) {
+            int middle = left + (right - left) / 2;
+            mergeSort(left, middle);
+            mergeSort(middle+1, right);
+
+        }
+    }
 
 
     void quickSort(int left, int right) {
@@ -66,7 +73,42 @@ public:
     void radixSort();      // (8) Radix Sort (Only for int)
     void bucketSort();     // (9) Bucket Sort
 
-    void merge(int left, int mid, int right);
+    void merge(int left, int mid, int right) {
+        int s1 = mid - left + 1;
+        int s2 = right - mid;
+        T* leftArr = new T[s1];
+        T* rightArr = new T[s2];
+        for (int i = 0; i < s1; ++i) {
+            leftArr[i] = data[left + i];
+        }
+        for (int i = 0; i < s2; ++i) {
+            rightArr[i] = data[mid + 1 + i];
+        }
+        int l = 0, r = 0, k = left;
+        while (l < s1 && r < s2) {
+            if (leftArr[l] < rightArr[r]) {
+                data[k] = leftArr[l];
+                l++;
+            }
+            else {
+                data[k] = rightArr[r];
+                r++;
+            }
+            k++;
+        }
+        while (l < s1) {
+            data[k] = leftArr[l];
+            l++;
+            k++;
+        }
+        while (r < s2) {
+            data[k] = rightArr[r];
+            r++;
+            k++;
+        }
+        delete[] leftArr;
+        delete[] rightArr;
+    }
 
     
     int partition(int low, int high) {
