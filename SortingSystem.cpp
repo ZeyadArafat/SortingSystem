@@ -35,7 +35,19 @@ public:
         }
     }
 
-    void bubbleSort();     // (3) Bubble Sort
+    void bubbleSort() {
+        bool swapped;
+        for (int i = 0; i < size; ++i) {
+            swapped = false;
+
+            for (int j = 1; j < size; ++j) {
+                if (data[j] < data[j-1]) {
+                    swap(data[j], data[j-1]);
+                }
+            }
+            if (!swapped) break;
+        }
+    }    // (3) Bubble Sort
 
     void shellSort() {
         int gap = size/2;
