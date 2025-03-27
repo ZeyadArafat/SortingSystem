@@ -71,12 +71,12 @@ public:
     
     int partition(int low, int high) {
         T pivot = data[low];
-        i = low;
-        for (j = low + 1; j < high; j++) {
-            if (pivot > data[j]) [
+        int i = low;
+        for (int j = low + 1; j < high; j++) {
+            if (pivot > data[j]) {
                 i++;
                 swap(data[i], data[j]);
-            ]
+            }
         }
         swap(data[i], pivot);
         return i;
@@ -85,7 +85,7 @@ public:
     void swap(T& a, T& b) {
         T tmp = a;
         a = b;
-        b = temp;
+        b = tmp;
     }
 
     void displayData();  // Print the current state of the array
