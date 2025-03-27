@@ -11,26 +11,26 @@ public:
     SortingSystem(int n);  // Constructor
     ~SortingSystem();      // Destructor
 
-     void insertionSort() {
-        for (int i = 1; i < size; ++i) {
-            int j = i;
-            while (data[j] < data[j-1] && j > 0) {
-                swap(data[j], data[j-1]);
-                j--;
-            }
+    void insertionSort() {
+    for (int i = 1; i < size; ++i) {
+        int j = i;
+        while (data[j] < data[j-1] && j > 0) {
+            swap(data[j], data[j-1]);
+            j--;
         }
-     }
+    }
+    }
 
     void selectionSort() {
-         for (int i = 0; i < size; ++i) {
-             int minIndex = i;
-             for (int j = i; j < size; ++j) {
-                 if (data[j] < data[minIndex]) {
-                     minIndex = j;
-                 }
-             }
-             swap(data[minIndex], data[i]);
-         }
+        for (int i = 0; i < size; ++i) {
+            int minIndex = i;
+            for (int j = i; j < size; ++j) {
+                if (data[j] < data[minIndex]) {
+                    minIndex = j;
+                }
+            }
+            swap(data[minIndex], data[i]);
+        }
     }
 
     void bubbleSort();     // (3) Bubble Sort
@@ -69,7 +69,29 @@ public:
     }
 
 
-    void countSort();      // (7) Count Sort (Only for int)
+    void countSort() {
+        int freq_array_size = get_max() + 1;
+        int* freq_array = new int[freq_array_size];
+
+        for (int i = 0; i < freq_array_size; i++) {
+            freq_array[i] = 0;
+        }
+
+        for (int i = 0; i < size; i++) {
+            freq_array[data[i]]++;
+        }
+
+        int index = 0;
+        for (int i = 0; i < freq_array_size; i++) {
+            while (freq_array[i] > 0) {
+                data[index] = i;
+                index++;
+                freq_array[i]--;
+            }
+        }
+
+        delete[] freq_array;
+    }    // (7) Count Sort (Only for int)
     void radixSort();      // (8) Radix Sort (Only for int)
     void bucketSort();     // (9) Bucket Sort
 
@@ -114,14 +136,22 @@ public:
     int partition(int low, int high) {
         T pivot = data[low];
         int i = low;
-        for (int j = low + 1; j < high; j++) {
+        for (int j = low + 1; j <= high; j++) {
             if (pivot > data[j]) {
                 i++;
                 swap(data[i], data[j]);
             }
         }
-        swap(data[i], pivot);
+        swap(data[i], data[low]);
         return i;
+    }
+
+    int get_max() {
+        int maximum = data[0];
+        for (int i : data) {
+            maximum = max(maximum, i);
+        }
+        return maximum;
     }
 
     void displayData();  // Print the current state of the array
