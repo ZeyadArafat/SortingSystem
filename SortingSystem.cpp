@@ -110,7 +110,7 @@ public:
         delete[] rightArr;
     }
 
-    
+
     int partition(int low, int high) {
         T pivot = data[low];
         int i = low;
@@ -122,12 +122,6 @@ public:
         }
         swap(data[i], pivot);
         return i;
-    }
-
-    void swap(T& a, T& b) {
-        T tmp = a;
-        a = b;
-        b = tmp;
     }
 
     void displayData();  // Print the current state of the array
