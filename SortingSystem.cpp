@@ -54,7 +54,7 @@ public:
             int middle = left + (right - left) / 2;
             mergeSort(left, middle);
             mergeSort(middle+1, right);
-
+            merge(left, middle, right);
         }
     }
 
