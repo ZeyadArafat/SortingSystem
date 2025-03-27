@@ -9,7 +9,9 @@ private:
 
 public:
     SortingSystem(int n);  // Constructor
-    ~SortingSystem();      // Destructor
+    ~SortingSystem() {
+        delete[] data;
+    }    // Destructor
 
     void insertionSort() {
     for (int i = 1; i < size; ++i) {
@@ -148,8 +150,8 @@ public:
 
     int get_max() {
         int maximum = data[0];
-        for (int i : data) {
-            maximum = max(maximum, i);
+        for (int i = 0; i < size; i++) {
+            maximum = max(maximum, data[i]);
         }
         return maximum;
     }
