@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 
 template <typename T>
@@ -8,10 +9,17 @@ private:
     int size; // Size of the array
 
 public:
-    SortingSystem(int n);  // Constructor
+    SortingSystem(int s) {
+        size = s;
+        data = new T[size];
+        for (int i = 0; i < size; ++i) {
+            cout << "enter data " << i+1 << ": ";
+            cin >> data[i];
+        }
+    }
     ~SortingSystem() {
         delete[] data;
-    }    // Destructor
+    }
 
     void insertionSort() {
     for (int i = 1; i < size; ++i) {
@@ -107,7 +115,86 @@ public:
         delete[] freq_array;
     }    // (7) Count Sort (Only for int)
     void radixSort();      // (8) Radix Sort (Only for int)
-    void bucketSort();     // (9) Bucket Sort
+
+    void bucketSort() {
+         if constexpr (is_same_v<T, string>) {
+             vector<vector<T>> buckets(256);
+             for (int i = 0; i < size; ++i) {
+                 buckets[data[i][0]].push_back(data[i]);
+             }
+             for (int i = 0; i < size; ++i) {
+                 for (int j = 1; j < buckets[i].size(); ++j) {
+                     int k = j;
+                     while (buckets[i][k] < buckets[i][k-1] && k > 0) {
+                         swap(buckets[i][k], buckets[i][k-1]);
+                         k--;
+                     }
+                 }
+             }
+             int currentBucket = 0;
+             for (int i = 0; i < size;) {
+                 for (T value: buckets[currentBucket]) {
+                     data[i] = value;
+                     i++;
+                 }
+                 currentBucket++;
+             }
+         }
+         else if (is_same_v<T,char>) {
+             vector<vector<T>> buckets(256);
+             for (int i = 0; i < size; ++i) {
+                 buckets[data[i]].push_back(data[i]);
+             }
+             int currentBucket = 0;
+             for (int i = 0; i < size;) {
+                 for (T value: buckets[currentBucket]) {
+                     data[i] = value;
+                     i++;
+                 }
+                 currentBucket++;
+             }
+         }
+         else {
+             double min = data[0];
+             double max = data[0];
+             for (int i = 0; i < size; ++i) {
+                 if (data[i] > max) {
+                     max = data[i];
+                 }
+                 if (data[i] < min) {
+                     min = data[i];
+                 }
+             }
+             double bucketRange = (max - min) / size;
+             vector<vector<T>> buckets(size);
+             for (int i = 0; i < size; ++i) {
+                 for (int j = 0; j < size; ++j) {
+                     if (data[i] <= min + bucketRange * (j+1)) {
+                         buckets[j].push_back(data[i]);
+                         break;
+                     }
+                 }
+             }
+             for (int i = 0; i < size; ++i) {
+                 for (int j = 1; j < buckets[i].size(); ++j) {
+                     int k = j;
+                     while (buckets[i][k] < buckets[i][k-1] && k > 0) {
+                         swap(buckets[i][k], buckets[i][k-1]);
+                         k--;
+                     }
+                 }
+             }
+             int currentBucket = 0;
+             for (int i = 0; i < size;) {
+                 for (int j = 0; j < buckets[currentBucket].size(); ++j) {
+                     data[i] = buckets[currentBucket][j];
+                     i++;
+                 }
+                 currentBucket++;
+             }
+         }
+
+    }
 
     void merge(int left, int mid, int right) {
         int s1 = mid - left + 1;
