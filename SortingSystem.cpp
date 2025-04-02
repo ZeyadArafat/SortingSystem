@@ -358,7 +358,12 @@ public:
         return i;
     }
 
-    void displayData();                                      // Print the current state of the array
+    void displayData() {
+        for (int i = 0; i < size; i++) {
+            cout << data[i] <<  " ";
+        }
+        cout << endl;
+    }                                // Print the current state of the array
     void measureSortTime(void (SortingSystem::*sortFunc)()); // Measure sorting time
 
     void showMenu(); // Display menu for user interaction
