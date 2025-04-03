@@ -56,6 +56,8 @@ public:
             cout << "Iteration " << i << ": ";
             displayData();
         }
+        cout << "\nSorted Data: ";
+        displayData();
     }
 
     void selectionSort()
@@ -78,6 +80,8 @@ public:
             cout << "Iteration " << i + 1 << ": ";
             displayData();
         }
+        cout << "\nSorted Data: ";
+        displayData();
     }
 
     void bubbleSort()
@@ -104,6 +108,8 @@ public:
             if (!swapped)
                 break;
         }
+        cout << "\nSorted Data: ";
+        displayData();
     }
 
     void shellSort()
@@ -130,6 +136,8 @@ public:
             gap /= 2;
             iteration++;
         }
+        cout << "\nSorted Data: ";
+        displayData();
     }
 
     void mergeSort(int left, int right)
@@ -170,11 +178,11 @@ public:
 
     void countSort()
     {
-        // if constexpr (!is_same_v<T, int>)
-        // {
-        //     cout << "Count Sort only works with integers!" << endl;
-        //     return;
-        // }
+        if constexpr (!is_same_v<T, int>)
+        {
+            cout << "Count Sort only works with integers!" << endl;
+            return;
+        }
 
         cout << "Sorting using Count Sort..." << endl;
         cout << "Initial Data: ";
@@ -204,7 +212,7 @@ public:
             }
         }
 
-        cout << "Sorted Data: ";
+        cout << "\nSorted Data: ";
         displayData();
 
         delete[] freq_array;
@@ -256,6 +264,9 @@ public:
             }
 
             cout << "After sorting digit at place value " << e << ": ";
+            displayData();
+
+            cout << "\nSorted Data: ";
             displayData();
 
             delete[] output;
@@ -364,6 +375,8 @@ public:
                 currentBucket++;
             }
         }
+        cout << "\nSorted Data: ";
+        displayData();
     }
 
     void merge(int left, int mid, int right)
