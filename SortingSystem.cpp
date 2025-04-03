@@ -470,8 +470,3 @@ public:
         }
     } // Display menu for user interaction
 };
-
-
-int main() {
-
-}
