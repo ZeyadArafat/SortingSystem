@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <chrono>
+
 using namespace std;
 
 template <typename T>
@@ -26,7 +28,7 @@ public:
         data = new T[size];
         for (int i = 0; i < size; ++i)
         {
-            cout << "enter data " << i + 1 << ": ";
+            cout << "Enter data " << i + 1 << ": ";
             cin >> data[i];
         }
     }
@@ -364,7 +366,14 @@ public:
         }
         cout << endl;
     }                                // Print the current state of the array
-    void measureSortTime(void (SortingSystem::*sortFunc)()); // Measure sorting time
+    void measureSortTime(void (SortingSystem::*sortFunc)()) {
+        auto initial = chrono::high_resolution_clock::now();
+        sortFunc();
+        auto final = chrono::high_resolution_clock::now();
+        auto time = chrono::duration_cast<chrono::microseconds> (final - initial);
+
+        cout << "Sorting Time: " << time << endl;
+    } // Measure sorting time
 
     void showMenu(); // Display menu for user interaction
 };
