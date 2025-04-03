@@ -375,5 +375,103 @@ public:
         cout << "Sorting Time: " << time << endl;
     } // Measure sorting time
 
-    void showMenu(); // Display menu for user interaction
+    void showMenu() {
+        while (ture) {
+            cout << "Enter the number of items to sort: " << endl;
+            int size;
+            cin >> size;
+
+            cout << "Enter the datatype of your data set: " << endl;
+            cout << "1. int" << endl;
+            cout << "2. float" << endl;
+            cout << "3. double" << endl;
+            cout << "4. char" << endl;
+            cout << "5. string" << endl;
+            char data_set_type;
+            cin >> data_set_type;
+
+            switch (data_set_type)
+            {
+            case '1':
+                SortingSystem<int> sorter = new SortingSystem(size);
+                break;
+            case '2':
+                SortingSystem<float> sorter = new SortingSystem(size);
+            case '3':
+                SortingSystem<double> sorter = new SortingSystem(size);
+            case '4':
+                SortingSystem<char> sorter = new SortingSystem(size);
+            case '5':
+                SortingSystem<string> sorter = new SortingSystem(size);
+            default:
+                cout << "invalid choice, try again." << endl;
+                break;
+            }
+
+
+            cout << "Select a sorting algorithm: " << endl;
+            cout << "1. Insertion Sort" << endl;
+            cout << "2. Selection Sort" << endl;
+            cout << "3. Bubble Sort" << endl;
+            cout << "4. Shell Sort" << endl;
+            cout << "5. Merge Sort" << endl;
+            cout << "6. Quick Sort" << endl;
+            cout << "7. Count Sort (Only for integers)" << endl;
+            cout << "8. Radix Sort (Only for integers)" << endl;
+            cout << "9. Bucket Sort" << endl;
+            cout << "Enter your choice (1-9):" << endl;
+
+            char choice;
+            cin >> choice;
+
+            switch (choice)
+            {
+                case '1':
+                    sorter.insertionSort();
+                    break;
+                case '2':
+                    sorter.selectionSort();
+                    break;
+                case '3':
+                    sorter.bubbleSort();
+                    break;
+                case '4':
+                    sorter.shellSort();
+                    break;
+                case '5':
+                    sorter.insertionSort();
+                    break;
+                case '6':
+                    sorter.insertionSort();
+                    break;
+                case '7':
+                    sorter.insertionSort();
+                    break;
+                case '8':
+                    sorter.insertionSort();
+                    break;
+                case '9':
+                    sorter.insertionSort();
+                    break;
+                default:
+                    cout << "Invalid Choice, try again." << endl;
+                    continue;
+                    break;
+            }
+
+            cout << "Do you want to sort another dataset? (y/n): ";
+            string resort;
+            cin >> resort;
+
+            if (resort.toLower() == "n") {
+                cout << "Thank you for using the sorting system! Goodbye!" << endl;
+                break;
+            }
+        }
+    } // Display menu for user interaction
 };
+
+
+int main() {
+
+}
