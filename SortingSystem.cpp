@@ -1,6 +1,8 @@
 #include <iostream>
-#include <vector>
 #include <chrono>
+#include <vector>
+#include <type_traits>
+
 
 using namespace std;
 
@@ -39,19 +41,29 @@ public:
 
     void insertionSort()
     {
+        cout << "Sorting using Insertion Sort..." << endl;
+        cout << "Initial Data: ";
+        displayData();
+
         for (int i = 1; i < size; ++i)
         {
             int j = i;
-            while (data[j] < data[j - 1] && j > 0)
+            while (j > 0 && data[j] < data[j - 1])
             {
                 swap(data[j], data[j - 1]);
                 j--;
             }
+            cout << "Iteration " << i << ": ";
+            displayData();
         }
     }
 
     void selectionSort()
     {
+        cout << "Sorting using Selection Sort..." << endl;
+        cout << "Initial Data: ";
+        displayData();
+
         for (int i = 0; i < size; ++i)
         {
             int minIndex = i;
@@ -63,55 +75,79 @@ public:
                 }
             }
             swap(data[minIndex], data[i]);
+            cout << "Iteration " << i + 1 << ": ";
+            displayData();
         }
     }
 
     void bubbleSort()
     {
-        bool swapped;
-        for (int i = 0; i < size; ++i)
-        {
-            swapped = false;
+        cout << "Sorting using Bubble Sort..." << endl;
+        cout << "Initial Data: ";
+        displayData();
 
-            for (int j = 1; j < size; ++j)
+        for (int i = 0; i < size - 1; ++i)
+        {
+            bool swapped = false;
+
+            for (int j = 0; j < size - i - 1; ++j)
             {
-                if (data[j] < data[j - 1])
+                if (data[j] > data[j + 1])
                 {
-                    swap(data[j], data[j - 1]);
+                    swap(data[j], data[j + 1]);
+                    swapped = true;
                 }
             }
+            cout << "Iteration " << i + 1 << ": ";
+            displayData();
+
             if (!swapped)
                 break;
         }
-    } // (3) Bubble Sort
+    }
 
     void shellSort()
     {
+        cout << "Sorting using Shell Sort..." << endl;
+        cout << "Initial Data: ";
+        displayData();
+
+        int iteration = 0;
         int gap = size / 2;
         while (gap > 0)
         {
             for (int i = gap; i < size; ++i)
             {
                 int j = i;
-                while (data[j] < data[j - gap] && j >= gap)
+                while (j >= gap && data[j] < data[j - gap])
                 {
                     swap(data[j], data[j - gap]);
                     j -= gap;
                 }
             }
+            cout << "Gap " << gap << ": ";
+            displayData();
             gap /= 2;
+            iteration++;
         }
     }
 
     void mergeSort(int left, int right)
     {
-        if (right > left)
+        if (left >= right)
+            return;
+
+        int middle = left + (right - left) / 2;
+        mergeSort(left, middle);
+        mergeSort(middle + 1, right);
+        merge(left, middle, right);
+
+        cout << "Merging elements from index " << left << " to " << right << ": ";
+        for (int i = 0; i < size; i++)
         {
-            int middle = left + (right - left) / 2;
-            mergeSort(left, middle);
-            mergeSort(middle + 1, right);
-            merge(left, middle, right);
+            cout << data[i] << " ";
         }
+        cout << endl;
     }
 
     void quickSort(int left, int right)
@@ -121,12 +157,29 @@ public:
 
         int mid = partition(left, right);
 
+        cout << "Partition at index " << mid << " (pivot: " << data[mid] << "): ";
+        for (int i = 0; i < size; i++)
+        {
+            cout << data[i] << " ";
+        }
+        cout << endl;
+
         quickSort(left, mid - 1);
         quickSort(mid + 1, right);
     }
 
     void countSort()
     {
+        // if constexpr (!is_same_v<T, int>)
+        // {
+        //     cout << "Count Sort only works with integers!" << endl;
+        //     return;
+        // }
+
+        cout << "Sorting using Count Sort..." << endl;
+        cout << "Initial Data: ";
+        displayData();
+
         int freq_array_size = get_max() + 1;
         int *freq_array = new int[freq_array_size];
 
@@ -137,7 +190,7 @@ public:
 
         for (int i = 0; i < size; i++)
         {
-            freq_array[data[i]]++;
+            ++freq_array[data[i]];
         }
 
         int index = 0;
@@ -147,16 +200,28 @@ public:
             {
                 data[index] = i;
                 index++;
-                freq_array[i]--;
+                --freq_array[i];
             }
         }
 
-        delete[] freq_array;
-    } // (7) Count Sort (Only for int)
+        cout << "Sorted Data: ";
+        displayData();
 
+        delete[] freq_array;
+    }
 
     void radixSort()
     {
+        if constexpr (!is_same_v<T, int>)
+        {
+            cout << "Radix Sort only works with integers!" << endl;
+            return;
+        }
+
+        cout << "Sorting using Radix Sort..." << endl;
+        cout << "Initial Data: ";
+        displayData();
+
         int max_element = get_max();
 
         for (int e = 1; max_element / e > 0; e *= 10)
@@ -171,7 +236,7 @@ public:
 
             for (int i = 0; i < size; i++)
             {
-                freq_array[(data[i] / e) % 10]++;
+                ++freq_array[(data[i] / e) % 10];
             }
 
             for (int i = 1; i < 10; i++)
@@ -182,7 +247,7 @@ public:
             for (int i = size - 1; i >= 0; i--)
             {
                 output[freq_array[(data[i] / e) % 10] - 1] = data[i];
-                freq_array[(data[i] / e) % 10]--;
+                --freq_array[(data[i] / e) % 10];
             }
 
             for (int i = 0; i < size; i++)
@@ -190,11 +255,13 @@ public:
                 data[i] = output[i];
             }
 
+            cout << "After sorting digit at place value " << e << ": ";
+            displayData();
+
             delete[] output;
             delete[] freq_array;
         }
-
-    } // (8) Radix Sort (Only for int)
+    }
 
     void bucketSort()
     {
@@ -316,7 +383,7 @@ public:
         int l = 0, r = 0, k = left;
         while (l < s1 && r < s2)
         {
-            if (leftArr[l] < rightArr[r])
+            if (leftArr[l] <= rightArr[r])
             {
                 data[k] = leftArr[l];
                 l++;
@@ -350,7 +417,7 @@ public:
         int i = low;
         for (int j = low + 1; j <= high; j++)
         {
-            if (pivot > data[j])
+            if (data[j] < pivot)
             {
                 i++;
                 swap(data[i], data[j]);
@@ -360,23 +427,64 @@ public:
         return i;
     }
 
-    void displayData() {
-        for (int i = 0; i < size; i++) {
-            cout << data[i] <<  " ";
+    void displayData()
+    {
+        cout << "[";
+        for (int i = 0; i < size; i++)
+        {
+            cout << data[i];
+            if (i < size - 1)
+                cout << ", ";
         }
-        cout << endl;
-    }                                // Print the current state of the array
-    void measureSortTime(void (SortingSystem::*sortFunc)()) {
+        cout << "]" << endl;
+    }
+
+    void measureSortTime(void (SortingSystem::*sortFunc)())
+    {
         auto initial = chrono::high_resolution_clock::now();
-        sortFunc();
+        (this->*sortFunc)();
         auto final = chrono::high_resolution_clock::now();
-        auto time = chrono::duration_cast<chrono::microseconds> (final - initial);
+        auto time = chrono::duration_cast<chrono::microseconds>(final - initial);
 
-        cout << "Sorting Time: " << time << endl;
-    } // Measure sorting time
+        cout << "Sorting Time: " << time.count() / 1000000.0 << " seconds" << endl;
+    }
 
-    void showMenu() {
-        while (ture) {
+    void runMergeSort()
+    {
+        cout << "Sorting using Merge Sort..." << endl;
+        cout << "Initial Data: ";
+        displayData();
+
+        auto initial = chrono::high_resolution_clock::now();
+        mergeSort(0, size - 1);
+        auto final = chrono::high_resolution_clock::now();
+        auto time = chrono::duration_cast<chrono::microseconds>(final - initial);
+
+        cout << "Sorted Data: ";
+        displayData();
+        cout << "Sorting Time: " << time.count() / 1000000.0 << " seconds" << endl;
+    }
+
+    void runQuickSort()
+    {
+        cout << "Sorting using Quick Sort..." << endl;
+        cout << "Initial Data: ";
+        displayData();
+
+        auto initial = chrono::high_resolution_clock::now();
+        quickSort(0, size - 1);
+        auto final = chrono::high_resolution_clock::now();
+        auto time = chrono::duration_cast<chrono::microseconds>(final - initial);
+
+        cout << "Sorted Data: ";
+        displayData();
+        cout << "Sorting Time: " << time.count() / 1000000.0 << " seconds" << endl;
+    }
+
+    void showMenu()
+    {
+        while (true)
+        {
             cout << "Enter the number of items to sort: " << endl;
             int size;
             cin >> size;
@@ -389,25 +497,6 @@ public:
             cout << "5. string" << endl;
             char data_set_type;
             cin >> data_set_type;
-
-            switch (data_set_type)
-            {
-            case '1':
-                SortingSystem<int> sorter = new SortingSystem(size);
-                break;
-            case '2':
-                SortingSystem<float> sorter = new SortingSystem(size);
-            case '3':
-                SortingSystem<double> sorter = new SortingSystem(size);
-            case '4':
-                SortingSystem<char> sorter = new SortingSystem(size);
-            case '5':
-                SortingSystem<string> sorter = new SortingSystem(size);
-            default:
-                cout << "invalid choice, try again." << endl;
-                break;
-            }
-
 
             cout << "Select a sorting algorithm: " << endl;
             cout << "1. Insertion Sort" << endl;
@@ -424,49 +513,213 @@ public:
             char choice;
             cin >> choice;
 
-            switch (choice)
+            switch (data_set_type)
             {
+            case '1':
+            {
+                SortingSystem<int> sorter(size);
+                switch (choice)
+                {
                 case '1':
-                    sorter.insertionSort();
+                    sorter.measureSortTime(&SortingSystem<int>::insertionSort);
                     break;
                 case '2':
-                    sorter.selectionSort();
+                    sorter.measureSortTime(&SortingSystem<int>::selectionSort);
                     break;
                 case '3':
-                    sorter.bubbleSort();
+                    sorter.measureSortTime(&SortingSystem<int>::bubbleSort);
                     break;
                 case '4':
-                    sorter.shellSort();
+                    sorter.measureSortTime(&SortingSystem<int>::shellSort);
                     break;
                 case '5':
-                    sorter.insertionSort();
+                    sorter.runMergeSort();
                     break;
                 case '6':
-                    sorter.insertionSort();
+                    sorter.runQuickSort();
                     break;
                 case '7':
-                    sorter.insertionSort();
+                    sorter.measureSortTime(&SortingSystem<int>::countSort);
                     break;
                 case '8':
-                    sorter.insertionSort();
+                    sorter.measureSortTime(&SortingSystem<int>::radixSort);
                     break;
                 case '9':
-                    sorter.insertionSort();
+                    sorter.measureSortTime(&SortingSystem<int>::bucketSort);
                     break;
                 default:
                     cout << "Invalid Choice, try again." << endl;
                     continue;
+                }
+                break;
+            }
+            case '2':
+            {
+                SortingSystem<float> sorter(size);
+                switch (choice)
+                {
+                case '1':
+                    sorter.measureSortTime(&SortingSystem<float>::insertionSort);
                     break;
+                case '2':
+                    sorter.measureSortTime(&SortingSystem<float>::selectionSort);
+                    break;
+                case '3':
+                    sorter.measureSortTime(&SortingSystem<float>::bubbleSort);
+                    break;
+                case '4':
+                    sorter.measureSortTime(&SortingSystem<float>::shellSort);
+                    break;
+                case '5':
+                    sorter.runMergeSort();
+                    break;
+                case '6':
+                    sorter.runQuickSort();
+                    break;
+                case '7':
+                    cout << "Count Sort only works with integers!" << endl;
+                    break;
+                case '8':
+                    cout << "Radix Sort only works with integers!" << endl;
+                    break;
+                case '9':
+                    sorter.measureSortTime(&SortingSystem<float>::bucketSort);
+                    break;
+                default:
+                    cout << "Invalid Choice, try again." << endl;
+                    continue;
+                }
+                break;
+            }
+            case '3':
+            {
+                SortingSystem<double> sorter(size);
+                switch (choice)
+                {
+                case '1':
+                    sorter.measureSortTime(&SortingSystem<double>::insertionSort);
+                    break;
+                case '2':
+                    sorter.measureSortTime(&SortingSystem<double>::selectionSort);
+                    break;
+                case '3':
+                    sorter.measureSortTime(&SortingSystem<double>::bubbleSort);
+                    break;
+                case '4':
+                    sorter.measureSortTime(&SortingSystem<double>::shellSort);
+                    break;
+                case '5':
+                    sorter.runMergeSort();
+                    break;
+                case '6':
+                    sorter.runQuickSort();
+                    break;
+                case '7':
+                    cout << "Count Sort only works with integers!" << endl;
+                    break;
+                case '8':
+                    cout << "Radix Sort only works with integers!" << endl;
+                    break;
+                case '9':
+                    sorter.measureSortTime(&SortingSystem<double>::bucketSort);
+                    break;
+                default:
+                    cout << "Invalid Choice, try again." << endl;
+                    continue;
+                }
+                break;
+            }
+            case '4':
+            {
+                SortingSystem<char> sorter(size);
+                switch (choice)
+                {
+                case '1':
+                    sorter.measureSortTime(&SortingSystem<char>::insertionSort);
+                    break;
+                case '2':
+                    sorter.measureSortTime(&SortingSystem<char>::selectionSort);
+                    break;
+                case '3':
+                    sorter.measureSortTime(&SortingSystem<char>::bubbleSort);
+                    break;
+                case '4':
+                    sorter.measureSortTime(&SortingSystem<char>::shellSort);
+                    break;
+                case '5':
+                    sorter.runMergeSort();
+                    break;
+                case '6':
+                    sorter.runQuickSort();
+                    break;
+                case '7':
+                    cout << "Count Sort only works with integers!" << endl;
+                    break;
+                case '8':
+                    cout << "Radix Sort only works with integers!" << endl;
+                    break;
+                case '9':
+                    sorter.measureSortTime(&SortingSystem<char>::bucketSort);
+                    break;
+                default:
+                    cout << "Invalid Choice, try again." << endl;
+                    continue;
+                }
+                break;
+            }
+            case '5':
+            {
+                SortingSystem<string> sorter(size);
+                switch (choice)
+                {
+                case '1':
+                    sorter.measureSortTime(&SortingSystem<string>::insertionSort);
+                    break;
+                case '2':
+                    sorter.measureSortTime(&SortingSystem<string>::selectionSort);
+                    break;
+                case '3':
+                    sorter.measureSortTime(&SortingSystem<string>::bubbleSort);
+                    break;
+                case '4':
+                    sorter.measureSortTime(&SortingSystem<string>::shellSort);
+                    break;
+                case '5':
+                    sorter.runMergeSort();
+                    break;
+                case '6':
+                    sorter.runQuickSort();
+                    break;
+                case '7':
+                    cout << "Count Sort only works with integers!" << endl;
+                    break;
+                case '8':
+                    cout << "Radix Sort only works with integers!" << endl;
+                    break;
+                case '9':
+                    sorter.measureSortTime(&SortingSystem<string>::bucketSort);
+                    break;
+                default:
+                    cout << "Invalid Choice, try again." << endl;
+                    continue;
+                }
+                break;
+            }
+            default:
+                cout << "Invalid choice, try again." << endl;
+                continue;
             }
 
             cout << "Do you want to sort another dataset? (y/n): ";
             string resort;
             cin >> resort;
 
-            if (resort.toLower() == "n") {
+            if (resort == "n" || resort == "N")
+            {
                 cout << "Thank you for using the sorting system! Goodbye!" << endl;
                 break;
             }
         }
+
     } // Display menu for user interaction
 };
