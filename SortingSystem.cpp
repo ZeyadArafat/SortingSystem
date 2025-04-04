@@ -1,6 +1,6 @@
 #include <iostream>
 #include <chrono>
-#include <vector>
+#include <array>
 #include <type_traits>
 
 
@@ -278,14 +278,16 @@ public:
     {
         if constexpr (is_same_v<T, string>)
         {
-            vector<vector<T>> buckets(256);
+            T buckets[256][size];
+            int bucketsCount[256] = {};
             for (int i = 0; i < size; ++i)
             {
-                buckets[data[i][0]].push_back(data[i]);
+                buckets[data[i][0]][bucketsCount[data[i][0]]] = data[i];
+                bucketsCount[data[i][0]]++;
             }
-            for (int i = 0; i < size; ++i)
+            for (int i = 0; i < 256; ++i)
             {
-                for (int j = 1; j < buckets[i].size(); ++j)
+                for (int j = 1; j < bucketsCount[i]; ++j)
                 {
                     int k = j;
                     while (buckets[i][k] < buckets[i][k - 1] && k > 0)
@@ -298,9 +300,9 @@ public:
             int currentBucket = 0;
             for (int i = 0; i < size;)
             {
-                for (T value : buckets[currentBucket])
+                for (int j = 0; j < bucketsCount[currentBucket]; ++j)
                 {
-                    data[i] = value;
+                    data[i] = buckets[currentBucket][j];
                     i++;
                 }
                 currentBucket++;
@@ -308,17 +310,19 @@ public:
         }
         else if (is_same_v<T, char>)
         {
-            vector<vector<T>> buckets(256);
+            T buckets[256][size];
+            int bucketsCount[256] = {};
             for (int i = 0; i < size; ++i)
             {
-                buckets[data[i]].push_back(data[i]);
+                buckets[data[i]][bucketsCount[data[i]]] = data[i];
+                bucketsCount[data[i]]++;
             }
             int currentBucket = 0;
             for (int i = 0; i < size;)
             {
-                for (T value : buckets[currentBucket])
+                for (int j = 0; j < bucketsCount[currentBucket]; j++)
                 {
-                    data[i] = value;
+                    data[i] = buckets[currentBucket][j];
                     i++;
                 }
                 currentBucket++;
@@ -340,21 +344,27 @@ public:
                 }
             }
             double bucketRange = (max - min) / size;
-            vector<vector<T>> buckets(size);
+            T buckets[size][size];
+            int bucketsCount[size] = {};
             for (int i = 0; i < size; ++i)
             {
                 for (int j = 0; j < size; ++j)
                 {
                     if (data[i] <= min + bucketRange * (j + 1))
                     {
-                        buckets[j].push_back(data[i]);
+                        buckets[j][bucketsCount[j]] = data[i];
+                        bucketsCount[j]++;
                         break;
                     }
                 }
             }
             for (int i = 0; i < size; ++i)
             {
-                for (int j = 1; j < buckets[i].size(); ++j)
+                if (bucketsCount[i] == 0)
+                {
+                    continue;
+                }
+                for (int j = 1; j < bucketsCount[i]; ++j)
                 {
                     int k = j;
                     while (buckets[i][k] < buckets[i][k - 1] && k > 0)
@@ -367,7 +377,7 @@ public:
             int currentBucket = 0;
             for (int i = 0; i < size;)
             {
-                for (int j = 0; j < buckets[currentBucket].size(); ++j)
+                for (int j = 0; j < bucketsCount[currentBucket]; ++j)
                 {
                     data[i] = buckets[currentBucket][j];
                     i++;
@@ -378,6 +388,7 @@ public:
         cout << "\nSorted Data: ";
         displayData();
     }
+
 
     void merge(int left, int mid, int right)
     {
