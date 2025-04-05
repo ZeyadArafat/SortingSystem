@@ -47,13 +47,13 @@ public:
 
         for (int i = 1; i < size; ++i)
         {
+            cout << "Iteration " << i << ", temp = " << data[i] << ": ";
             int j = i;
             while (j > 0 && data[j] < data[j - 1])
             {
                 swap(data[j], data[j - 1]);
                 j--;
             }
-            cout << "Iteration " << i << ": ";
             displayData();
         }
         cout << "\nSorted Data: ";
@@ -76,8 +76,9 @@ public:
                     minIndex = j;
                 }
             }
+
+            cout << "Iteration " << i + 1 << ", the " << i + 1 << "th smallest element is: " << data[minIndex] << ": ";
             swap(data[minIndex], data[i]);
-            cout << "Iteration " << i + 1 << ": ";
             displayData();
         }
         cout << "\nSorted Data: ";
@@ -747,3 +748,9 @@ public:
 
     } // Display menu for user interaction
 };
+
+
+int main() {
+    SortingSystem<int> sorter(5);
+    sorter.measureSortTime(&SortingSystem<int>::selectionSort);
+}
