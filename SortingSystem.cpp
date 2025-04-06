@@ -201,12 +201,20 @@ public:
             freq_array[i] = 0;
         }
 
+        cout << "\nFilling the Frequency array (count) ...";
         for (int i = 0; i < size; i++)
         {
             ++freq_array[data[i]];
         }
+        cout << "\nCount array: [";
+        for (int i = 0; i < freq_array_size; i++) {
+            if (i == freq_array_size - 1) cout << freq_array[i];
+            else cout << freq_array[i] << ", ";
+        }
+        cout << "]\n";
 
         int index = 0;
+        cout << "\nUpdating the data & the count array..." << endl;
         for (int i = 0; i < freq_array_size; i++)
         {
             while (freq_array[i] > 0)
@@ -214,6 +222,14 @@ public:
                 data[index] = i;
                 index++;
                 --freq_array[i];
+                cout << "Current count: [";
+                for (int j = 0; j < freq_array_size; j++) {
+                    if (j == freq_array_size - 1) cout << freq_array[j];
+                    else cout << freq_array[j] << ", ";
+                }
+                cout << "]\n";
+                cout << "Current data: ";
+                displayData();
             }
         }
 
@@ -756,5 +772,5 @@ public:
 
 int main() {
     SortingSystem<int> sorter(5);
-    sorter.measureSortTime(&SortingSystem<int>::selectionSort);
+    sorter.measureSortTime(&SortingSystem<int>::radixSort);
 }
