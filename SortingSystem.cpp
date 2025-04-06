@@ -3,7 +3,6 @@
 #include <array>
 #include <type_traits>
 
-
 using namespace std;
 
 template <typename T>
@@ -49,9 +48,9 @@ public:
         {
             T temp = data[i];
             int j = i;
-            while (j > 0 && data[j-1] > temp)
+            while (j > 0 && data[j - 1] > temp)
             {
-                data[j] = data[j-1];
+                data[j] = data[j - 1];
                 j--;
             }
             data[j] = temp;
@@ -131,7 +130,7 @@ public:
                 int j = i;
                 while (j >= gap && temp < data[j - gap])
                 {
-                    data[j] = data[j-gap];
+                    data[j] = data[j - gap];
                     j -= gap;
                 }
                 data[j] = temp;
@@ -207,9 +206,12 @@ public:
             ++freq_array[data[i]];
         }
         cout << "\nCount array: [";
-        for (int i = 0; i < freq_array_size; i++) {
-            if (i == freq_array_size - 1) cout << freq_array[i];
-            else cout << freq_array[i] << ", ";
+        for (int i = 0; i < freq_array_size; i++)
+        {
+            if (i == freq_array_size - 1)
+                cout << freq_array[i];
+            else
+                cout << freq_array[i] << ", ";
         }
         cout << "]\n";
 
@@ -223,9 +225,12 @@ public:
                 index++;
                 --freq_array[i];
                 cout << "Current count: [";
-                for (int j = 0; j < freq_array_size; j++) {
-                    if (j == freq_array_size - 1) cout << freq_array[j];
-                    else cout << freq_array[j] << ", ";
+                for (int j = 0; j < freq_array_size; j++)
+                {
+                    if (j == freq_array_size - 1)
+                        cout << freq_array[j];
+                    else
+                        cout << freq_array[j] << ", ";
                 }
                 cout << "]\n";
                 cout << "Current data: ";
@@ -409,7 +414,6 @@ public:
         cout << "\nSorted Data: ";
         displayData();
     }
-
 
     void merge(int left, int mid, int right)
     {
@@ -769,8 +773,8 @@ public:
     } // Display menu for user interaction
 };
 
-
-int main() {
+int main()
+{
     SortingSystem<int> sorter(5);
     sorter.measureSortTime(&SortingSystem<int>::radixSort);
 }
