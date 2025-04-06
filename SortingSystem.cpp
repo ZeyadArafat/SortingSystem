@@ -47,13 +47,15 @@ public:
 
         for (int i = 1; i < size; ++i)
         {
-            cout << "Iteration " << i << ", temp = " << data[i] << ": ";
+            T temp = data[i];
             int j = i;
-            while (j > 0 && data[j] < data[j - 1])
+            while (j > 0 && data[j-1] > temp)
             {
-                swap(data[j], data[j - 1]);
+                data[j] = data[j-1];
                 j--;
             }
+            data[j] = temp;
+            cout << "Iteration " << i << ": ";
             displayData();
         }
         cout << "\nSorted Data: ";
@@ -125,12 +127,14 @@ public:
         {
             for (int i = gap; i < size; ++i)
             {
+                T temp = data[i];
                 int j = i;
-                while (j >= gap && data[j] < data[j - gap])
+                while (j >= gap && temp < data[j - gap])
                 {
-                    swap(data[j], data[j - gap]);
+                    data[j] = data[j-gap];
                     j -= gap;
                 }
+                data[j] = temp;
             }
             cout << "Gap " << gap << ": ";
             displayData();
