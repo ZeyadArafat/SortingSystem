@@ -772,9 +772,3 @@ public:
 
     } // Display menu for user interaction
 };
-
-int main()
-{
-    SortingSystem<int> sorter(5);
-    sorter.measureSortTime(&SortingSystem<int>::radixSort);
-}
